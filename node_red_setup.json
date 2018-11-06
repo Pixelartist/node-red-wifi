@@ -1,0 +1,927 @@
+[
+    {
+        "id": "b1eb173b.864548",
+        "type": "tab",
+        "label": "Manual Triggers",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b66ebedf.e393",
+        "type": "tab",
+        "label": "Rest API",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "5b3f5d2a.d1b044",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "b9a17326.ab58b",
+        "type": "ui_group",
+        "z": "",
+        "name": "H801",
+        "tab": "17119c66.f47c54",
+        "order": 1,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "fca30f3f.01545",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "15",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "17119c66.f47c54",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Test",
+        "icon": "dashboard",
+        "order": 4
+    },
+    {
+        "id": "a5b2bc6e.0db0e",
+        "type": "tcp out",
+        "z": "b1eb173b.864548",
+        "host": "10.10.13.169",
+        "port": "5577",
+        "beserver": "client",
+        "base64": false,
+        "end": true,
+        "name": "",
+        "x": 1020,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "127d0247.e5af4e",
+        "type": "inject",
+        "z": "5b3f5d2a.d1b044",
+        "name": "make request",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 410,
+        "y": 280,
+        "wires": [
+            [
+                "eb3d41b5.eef98"
+            ]
+        ]
+    },
+    {
+        "id": "eb3d41b5.eef98",
+        "type": "http request",
+        "z": "5b3f5d2a.d1b044",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "url": "https://www.npmjs.com/package/node-red",
+        "tls": "",
+        "x": 614.5,
+        "y": 280,
+        "wires": [
+            [
+                "cb63dd2e.23546"
+            ]
+        ]
+    },
+    {
+        "id": "2f8d56b1.e8a41a",
+        "type": "debug",
+        "z": "5b3f5d2a.d1b044",
+        "name": "",
+        "active": true,
+        "console": "false",
+        "complete": "false",
+        "x": 1030,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "cb63dd2e.23546",
+        "type": "html",
+        "z": "5b3f5d2a.d1b044",
+        "name": "number",
+        "property": "",
+        "outproperty": "",
+        "tag": "#top > div.package__rightSidebar___9dMXo.w-third-l.mt3.w-100.ph3.ph4-m.pv3.pv0-l.order-1-ns.order-0 > div:nth-child(3) > div > div > p",
+        "ret": "text",
+        "as": "single",
+        "x": 820,
+        "y": 280,
+        "wires": [
+            [
+                "2f8d56b1.e8a41a"
+            ]
+        ]
+    },
+    {
+        "id": "fce4e72a.b08c38",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "Set to green",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 390,
+        "y": 489,
+        "wires": [
+            [
+                "6884d6a2.7425e8"
+            ]
+        ]
+    },
+    {
+        "id": "6884d6a2.7425e8",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "less bytes",
+        "func": "data = [];\ndata[0] = 0x31; //Mode\ndata[1] = 0x00; //RED\ndata[2] = 0xFF; //Green\ndata[3] = 0x00; //Blue\ndata[4] = 0x00; //WW\ndata[5] = 0xF0; //True\ndata[6] = 0x0F; //False\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[7] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 580,
+        "y": 489,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e",
+                "7672d15d.3b8a7"
+            ]
+        ]
+    },
+    {
+        "id": "7672d15d.3b8a7",
+        "type": "debug",
+        "z": "b1eb173b.864548",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 950,
+        "y": 249,
+        "wires": []
+    },
+    {
+        "id": "5c9b50c0.eaa3f",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "on",
+        "func": "data = [];\ndata[0] = 0x71; //mode\ndata[1] = 0x23; //on / off\ndata[2] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[3] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 590,
+        "y": 669,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e",
+                "7672d15d.3b8a7"
+            ]
+        ]
+    },
+    {
+        "id": "8136af23.7e17d",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn on",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 370,
+        "y": 669,
+        "wires": [
+            [
+                "5c9b50c0.eaa3f"
+            ]
+        ]
+    },
+    {
+        "id": "1385abf7.9bbfb4",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn off",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 370,
+        "y": 609,
+        "wires": [
+            [
+                "268a4899.1108a8"
+            ]
+        ]
+    },
+    {
+        "id": "268a4899.1108a8",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "off",
+        "func": "data = [];\ndata[0] = 0x71; //mode\ndata[1] = 0x24; //on / off\ndata[2] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[3] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 590,
+        "y": 609,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e",
+                "7672d15d.3b8a7"
+            ]
+        ]
+    },
+    {
+        "id": "11b05a4b.dd9236",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn on",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 310,
+        "y": 389,
+        "wires": [
+            [
+                "f9d7d34f.a906"
+            ]
+        ]
+    },
+    {
+        "id": "f9d7d34f.a906",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "strobe mode red speed 50",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x31; //on / off\ndata[2] = 0x10; //false\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 389,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e",
+                "7672d15d.3b8a7"
+            ]
+        ]
+    },
+    {
+        "id": "cc4d18ad.0b7f48",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn on",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 310,
+        "y": 329,
+        "wires": [
+            [
+                "9bd83222.70506"
+            ]
+        ]
+    },
+    {
+        "id": "9bd83222.70506",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "strobe mode red speed 100",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x31; //\ndata[2] = 0x01; //speed\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 560,
+        "y": 329,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e",
+                "7672d15d.3b8a7"
+            ]
+        ]
+    },
+    {
+        "id": "9368a895.e7ea38",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn on",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 310,
+        "y": 269,
+        "wires": [
+            [
+                "fce408e3.260ba8"
+            ]
+        ]
+    },
+    {
+        "id": "fce408e3.260ba8",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "red pulsar speed slow",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x26; //\ndata[2] = 0x10; //speed\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 269,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e",
+                "7672d15d.3b8a7"
+            ]
+        ]
+    },
+    {
+        "id": "c27457c8.f8f6a8",
+        "type": "http in",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "url": "/setlight",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 290,
+        "y": 420,
+        "wires": [
+            [
+                "2ce7ea60.a33ab6",
+                "bd82aed0.5fa34",
+                "3c78123b.83a08e",
+                "18fa9f3c.8d5fc1",
+                "6e2c3c07.1cb6e4"
+            ]
+        ]
+    },
+    {
+        "id": "bd82aed0.5fa34",
+        "type": "switch",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "property": "payload.color",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "green",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "red",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "yellow",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 610,
+        "y": 360,
+        "wires": [
+            [
+                "961e57f7.4e3468"
+            ],
+            [
+                "109fda41.4c5df6"
+            ],
+            [
+                "470653d3.42411c"
+            ]
+        ]
+    },
+    {
+        "id": "961e57f7.4e3468",
+        "type": "function",
+        "z": "b66ebedf.e393",
+        "name": "green",
+        "func": "data = [];\ndata[0] = 0x31; //Mode\ndata[1] = 0x00; //RED\ndata[2] = 0xFF; //Green\ndata[3] = 0x00; //Blue\ndata[4] = 0x00; //WW\ndata[5] = 0xF0; //True\ndata[6] = 0x0F; //False\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[7] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 930,
+        "y": 300,
+        "wires": [
+            [
+                "36bcb26.1a87d4e"
+            ]
+        ]
+    },
+    {
+        "id": "109fda41.4c5df6",
+        "type": "function",
+        "z": "b66ebedf.e393",
+        "name": "red",
+        "func": "data = [];\ndata[0] = 0x31; //Mode\ndata[1] = 0xFF; //RED\ndata[2] = 0x00; //Green\ndata[3] = 0x00; //Blue\ndata[4] = 0x00; //WW\ndata[5] = 0xF0; //True\ndata[6] = 0x0F; //False\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[7] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 930,
+        "y": 340,
+        "wires": [
+            [
+                "36bcb26.1a87d4e"
+            ]
+        ]
+    },
+    {
+        "id": "36bcb26.1a87d4e",
+        "type": "tcp out",
+        "z": "b66ebedf.e393",
+        "host": "10.10.13.169",
+        "port": "5577",
+        "beserver": "client",
+        "base64": false,
+        "end": true,
+        "name": "",
+        "x": 1200,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "3c78123b.83a08e",
+        "type": "debug",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 550,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "2ce7ea60.a33ab6",
+        "type": "template",
+        "z": "b66ebedf.e393",
+        "name": "page",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<html>\n    <head></head>\n    <body>\n        <h1>I need to put color to {{ payload.color }} and status should be {{ payload.switch }} where alert is set to {{ payload.emergency_level }}!</h1>\n    </body>\n</html>",
+        "x": 570,
+        "y": 240,
+        "wires": [
+            [
+                "a27459a6.dad368"
+            ]
+        ]
+    },
+    {
+        "id": "a27459a6.dad368",
+        "type": "http response",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 730,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "1a7c37b1.bd53c8",
+        "type": "function",
+        "z": "b66ebedf.e393",
+        "name": "on",
+        "func": "data = [];\ndata[0] = 0x71; //mode\ndata[1] = 0x23; //on / off\ndata[2] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[3] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 930,
+        "y": 460,
+        "wires": [
+            [
+                "36bcb26.1a87d4e"
+            ]
+        ]
+    },
+    {
+        "id": "2d00f087.960c3",
+        "type": "function",
+        "z": "b66ebedf.e393",
+        "name": "off",
+        "func": "data = [];\ndata[0] = 0x71; //mode\ndata[1] = 0x24; //on / off\ndata[2] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[3] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 930,
+        "y": 500,
+        "wires": [
+            [
+                "36bcb26.1a87d4e"
+            ]
+        ]
+    },
+    {
+        "id": "18fa9f3c.8d5fc1",
+        "type": "switch",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "property": "payload.switch",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "on",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 610,
+        "y": 460,
+        "wires": [
+            [
+                "4c896f28.26acb"
+            ],
+            [
+                "c8cc767a.d15bd8"
+            ]
+        ]
+    },
+    {
+        "id": "4c896f28.26acb",
+        "type": "delay",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 760,
+        "y": 440,
+        "wires": [
+            [
+                "1a7c37b1.bd53c8"
+            ]
+        ]
+    },
+    {
+        "id": "c8cc767a.d15bd8",
+        "type": "delay",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 760,
+        "y": 480,
+        "wires": [
+            [
+                "2d00f087.960c3"
+            ]
+        ]
+    },
+    {
+        "id": "6e2c3c07.1cb6e4",
+        "type": "switch",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "property": "payload.emergency_level",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "P1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "P2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "P3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "P4",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "P5",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 490,
+        "y": 660,
+        "wires": [
+            [
+                "67764cde.4a8874"
+            ],
+            [
+                "ce35a25.fd70d6"
+            ],
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "67764cde.4a8874",
+        "type": "delay",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 740,
+        "y": 580,
+        "wires": [
+            [
+                "79196a19.858f34"
+            ]
+        ]
+    },
+    {
+        "id": "ce35a25.fd70d6",
+        "type": "delay",
+        "z": "b66ebedf.e393",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "3",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 740,
+        "y": 640,
+        "wires": [
+            [
+                "4a2cf43c.01a10c"
+            ]
+        ]
+    },
+    {
+        "id": "79196a19.858f34",
+        "type": "function",
+        "z": "b66ebedf.e393",
+        "name": "P1",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x26; //\ndata[2] = 0x02; //speed\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 580,
+        "wires": [
+            [
+                "36bcb26.1a87d4e"
+            ]
+        ]
+    },
+    {
+        "id": "4a2cf43c.01a10c",
+        "type": "function",
+        "z": "b66ebedf.e393",
+        "name": "P2",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x26; //\ndata[2] = 0x06; //speed\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 640,
+        "wires": [
+            [
+                "36bcb26.1a87d4e"
+            ]
+        ]
+    },
+    {
+        "id": "9353cf09.048e8",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn on",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 310,
+        "y": 209,
+        "wires": [
+            [
+                "e182a426.475718"
+            ]
+        ]
+    },
+    {
+        "id": "e182a426.475718",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "red pulsar speed mid",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x26; //\ndata[2] = 0x06; //speed\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 209,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e"
+            ]
+        ]
+    },
+    {
+        "id": "62978faf.fc5b9",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn on",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 310,
+        "y": 140,
+        "wires": [
+            [
+                "348bdd5.8d24822"
+            ]
+        ]
+    },
+    {
+        "id": "348bdd5.8d24822",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "red pulsar speed fast",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x26; //\ndata[2] = 0x02; //speed\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 540,
+        "y": 140,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e"
+            ]
+        ]
+    },
+    {
+        "id": "76294b44.636494",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "turn on",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 310,
+        "y": 80,
+        "wires": [
+            [
+                "65a4b58e.f3becc"
+            ]
+        ]
+    },
+    {
+        "id": "65a4b58e.f3becc",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "white pulsar speed fast",
+        "func": "data = [];\ndata[0] = 0x61; //mode\ndata[1] = 0x2c; //\ndata[2] = 0x02; //speed\ndata[3] = 0x0F; //false\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[4] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 550,
+        "y": 80,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e"
+            ]
+        ]
+    },
+    {
+        "id": "5649f4cb.5ac78c",
+        "type": "inject",
+        "z": "b1eb173b.864548",
+        "name": "Set to yellow",
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 390,
+        "y": 540,
+        "wires": [
+            [
+                "d4dc97fc.b7bd28"
+            ]
+        ]
+    },
+    {
+        "id": "d4dc97fc.b7bd28",
+        "type": "function",
+        "z": "b1eb173b.864548",
+        "name": "less bytes",
+        "func": "data = [];\ndata[0] = 0x31; //Mode\ndata[1] = 0x66; //RED\ndata[2] = 0x66; //Green\ndata[3] = 0x00; //Blue\ndata[4] = 0x00; //WW\ndata[5] = 0xF0; //True\ndata[6] = 0x0F; //False\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[7] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 580,
+        "y": 540,
+        "wires": [
+            [
+                "a5b2bc6e.0db0e"
+            ]
+        ]
+    },
+    {
+        "id": "470653d3.42411c",
+        "type": "function",
+        "z": "b66ebedf.e393",
+        "name": "yellow",
+        "func": "data = [];\ndata[0] = 0x31; //Mode\ndata[1] = 0x66; //RED\ndata[2] = 0x66; //Green\ndata[3] = 0x00; //Blue\ndata[4] = 0x00; //WW\ndata[5] = 0xF0; //True\ndata[6] = 0x0F; //False\nvar x = checksum(data);\n\nfunction checksum(data){\nvalue = 0\n for (var i in data) {\n  value = value + data[i];\n }\nreturn value & 0xFF;\n}\n\ndata[7] = x; //Checksum\n\nmsg.payload = new Buffer(data);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 930,
+        "y": 380,
+        "wires": [
+            [
+                "36bcb26.1a87d4e"
+            ]
+        ]
+    }
+]
