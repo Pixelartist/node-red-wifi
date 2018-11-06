@@ -3,7 +3,7 @@ Reverse engineered commands for the led wifi strip connected to node red
 
 General approach
 
-##Commands
+## Commands
 All commands are sent at a TCP packet to port 5577, you need no handshake or authorization to do this.
 
 <command group> …modifiers… <checksum>
@@ -14,12 +14,12 @@ Set Color = 0x31 RED GREEN BLUE WW CW TRUE FALSE CHECKSUM
 Set Blue 7% = 0x31 0x00 0x00 0x07 0x0 0x0 0xFO 0xOF 0x37
 Checksum is calculated by adding up all the bits then AND masking it with 0xFF
 
-##Command Groups
+## Command Groups
 SetColor = 0x31
 SetMode = 0x61
 SetPower  = 0x71
 
-##Constants
+## Constants
 TRUE = 0xF0
 FALSE = 0x0F
 ON = 0x23
